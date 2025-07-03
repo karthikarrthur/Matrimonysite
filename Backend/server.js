@@ -6,37 +6,36 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/UserRoutes.js";
 import { fileURLToPath } from "url";
 
-// ========== Setup for ES Modules (__dirname) ==========
+// ===== Setup for ES Modules (__dirname) =====
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ========== Load Environment Variables ==========
+// ===== Load .env Variables Early =====
 dotenv.config();
 
-// ========== Connect to MongoDB ==========
+// ===== Connect MongoDB =====
 connectDB();
 
-// ========== Initialize Express App ==========
+// ===== Init Express =====
 const app = express();
 
-// ========== Middleware ==========
+// ===== Middleware =====
 app.use(cors());
-app.use(express.json()); // Accept JSON payloads
+app.use(express.json()); // To parse JSON bodies
 
-// ========== Serve Static Files (for profile uploads) ==========
+// ===== Static Folder for Uploads =====
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-
-// ========== API Routes ==========
+// ===== Routes =====
 app.use("/api/users", userRoutes);
 
-// ========== Default Root Route ==========
+// ===== Default Route =====
 app.get("/", (req, res) => {
   res.send("✅ ShaadiRoots API is running...");
 });
 
-// ========== Start the Server ==========
+// ===== Start Server =====
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });
