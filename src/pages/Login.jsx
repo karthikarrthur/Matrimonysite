@@ -23,7 +23,7 @@ const Login = () => {
 
   const handleSubmit = async (values, actions) => {
     try {
-      const response = await fetch("http://localhost:5000/api/users/login", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,21 +40,24 @@ const Login = () => {
       try {
         data = JSON.parse(text);
       } catch (parseError) {
-        console.error("❌ Invalid JSON response:", text);
+        console.error("❌ Invalid JSON response from server:", text);
         alert("Server error. Please contact support.");
         return;
       }
 
       if (response.ok && data.token && data.user) {
-        localStorage.setItem("user", JSON.stringify({
-          token: data.token,
-          fullName: data.user.fullName,
-          email: data.user.email,
-          city: data.user.city,
-          gender: data.user.gender,
-          bio: data.user.bio,
-          profileImage: data.user.profileImage,
-        }));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            token: data.token,
+            fullName: data.user.fullName,
+            email: data.user.email,
+            city: data.user.city,
+            gender: data.user.gender,
+            bio: data.user.bio,
+            profileImage: data.user.profileImage,
+          })
+        );
 
         alert(data.message || "Login successful!");
         actions.resetForm();
@@ -63,7 +66,7 @@ const Login = () => {
         alert(data.message || "Invalid email or password.");
       }
     } catch (err) {
-      console.error("🔥 Login failed:", err.message);
+      console.error("🔥 Login request failed:", err.message);
       alert("Network error. Please try again later.");
     }
   };
@@ -71,9 +74,7 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-100 to-pink-100 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">
-          Welcome Back 💜
-        </h2>
+        <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">Welcome Back 💜</h2>
 
         <Formik
           initialValues={initialValues}
@@ -121,4 +122,5 @@ const Login = () => {
   );
 };
 
+// ✅ Essential: export default to avoid "Login is not defined" errors
 export default Login;
